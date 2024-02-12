@@ -17,6 +17,7 @@ az configure --defaults group=[sandbox resource group name]
 
 # Deploy
 az deployment group create --template-file main.bicep
+# Using parameters
 az deployment group create --template-file main.bicep --parameters environmentType=nonprod
 
 # Check deployments

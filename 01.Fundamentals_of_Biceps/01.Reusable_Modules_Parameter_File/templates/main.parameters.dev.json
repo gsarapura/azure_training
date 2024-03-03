@@ -17,7 +17,7 @@
         "sqlServerAdministratorLogin": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/01383f7e-b3be-4607-a9f3-b77a8c998aa5/resourceGroups/learn-e04c5f48-8570-4ab8-beb1-8ac89e44c237/providers/Microsoft.KeyVault/vaults/test-key-vault-gs123"
+                    "id": "/subscriptions/4497d15e-2307-44e9-8982-597e404ce799/resourceGroups/learn-23a57180-43bf-4b17-b926-b7c1b462a760/providers/Microsoft.KeyVault/vaults/TESTO"
                 },
                 "secretName": "sqlServerAdministratorLogin"
             }
@@ -25,7 +25,7 @@
         "sqlServerAdministratorPassword": {
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/01383f7e-b3be-4607-a9f3-b77a8c998aa5/resourceGroups/learn-e04c5f48-8570-4ab8-beb1-8ac89e44c237/providers/Microsoft.KeyVault/vaults/test-key-vault-gs123"
+                    "id": "/subscriptions/4497d15e-2307-44e9-8982-597e404ce799/resourceGroups/learn-23a57180-43bf-4b17-b926-b7c1b462a760/providers/Microsoft.KeyVault/vaults/TESTO"
                 },
                 "secretName": "sqlServerAdministratorPassword"
             }

@@ -1,8 +1,9 @@
 # Install AZ CLI 
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 
-# Sign in to Azure
+# Install and upgrade bicep
 az bicep install && az bicep upgrade
+# Sign in to Azure
 az login
 az account set --subscription "Concierge Subscription"
 # Skip following two step if only one subscription is enabled
@@ -11,7 +12,7 @@ az account list \
    --query "[?contains(name, 'Concierge Subscription')].id" \
    --output table
 az account set --subscription {your subscription ID}
-#
+
 # Set the default resource group
 az configure --defaults group=[sandbox resource group name]
 

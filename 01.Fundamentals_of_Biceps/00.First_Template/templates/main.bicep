@@ -46,4 +46,6 @@ module appService 'modules/appService.bicep' = {
   }
 }
 
+// Useful for getting values from Postal - Azure Deployment in Resource Group
+// To share data betweeen modules
 output appServiceAppHostName string = appService.outputs.appServiceAppHostName

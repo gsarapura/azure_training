@@ -4,7 +4,7 @@ but to create an App Service app, you first need to create an App Service plan.
 The App Service plan represents the server-hosting resources, and it's declared like this example:
 */
 
-param location string = resourceGroup().id
+param location string = resourceGroup().location
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'toy-product-launch-plan'

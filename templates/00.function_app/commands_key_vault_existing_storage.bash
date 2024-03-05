@@ -1,7 +1,9 @@
 #! /bin/bash
 keyVaultName='YOUR-KEY-VAULT-NAME'
 read -s -p "Enter the AzureWebJobsStorage: " AzureWebJobsStorage 
+echo -e "\nAzureWebJobsStorage set: $AzureWebJobsStorage\n"
 read -s -p "Enter the WebsiteContentAzureFileConnectionString: " WebsiteContentAzureFileConnectionString
+echo -e "\nWebsiteContentAzureFileConnectionString set: $WebsiteContentAzureFileConnectionString"
 
 az keyvault create \
     --name $keyVaultName \

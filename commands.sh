@@ -13,6 +13,9 @@ az account list \
    --output table
 az account set --subscription {your subscription ID}
 
+# Create resource group:
+az group create --name demoResourceGroup --location eastus
+
 # Set the default resource group
 az configure --defaults group=[sandbox resource group name]
 

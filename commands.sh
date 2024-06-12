@@ -19,7 +19,7 @@ az group create --name demoResourceGroup --location eastus
 # Set the default resource group
 az configure --defaults group=[sandbox resource group name]
 
-# Deploy
+# -------------------------- Deploy for Biceps --------------------------
 az deployment group create --template-file main.bicep
 # Using parameters
 az deployment group create --template-file main.bicep --parameters environmentType=nonprod
@@ -30,6 +30,7 @@ az deployment group create \
 
 # Check deployments
 az deployment group list --output table
+# ----------------------------------------------------------------------
 
 # Create Key Vault and Secrets
 # Key vault names must be a globally unique string of 3 to 24 characters that can contain only 

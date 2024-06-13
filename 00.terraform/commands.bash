@@ -24,8 +24,10 @@ terraform plan
 # configuration files. Running the command creates an execution plan but doesn't apply it. This pattern allows you to
 # verify if the execution plan matches your expectations before you make any changes to actual resources.
 terraform plan -out main.tfplan
+terraform plan -var="resource_group_name=NAME"
 # After you verify the execution plan, run terraform apply to apply the plan. This command creates the defined resources.
 terraform apply main.tfplan
+terraform apply -var="resource_group_name=NAME"
 # Verify resource deployed, in this case a storage account
 terraform state show 'azurerm_storage_account.example'
 

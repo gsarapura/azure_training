@@ -10,6 +10,15 @@ provider "azurerm" {
   features {}
 }
 
+variable "resource_group_name" {
+  type        = string
+  description = "The name of the resource group"
+}
+
+data "azurerm_resource_group" "example" {
+  name = var.resource_group_name
+}
+
 data "azurerm_resource_group" "example" {
   name = "learn-50e107c3-741e-48ad-a0c2-f471225d7663"
 }

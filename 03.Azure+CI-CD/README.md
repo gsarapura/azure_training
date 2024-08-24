@@ -1,0 +1,1 @@
+Then add any other platform, such as Azure DevOps, GitLab, etc.

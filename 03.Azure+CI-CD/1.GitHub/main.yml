@@ -1,0 +1,56 @@
+on:
+  push:
+    branches:
+      - 'main'
+
+  pull_request:
+    branches:
+      - 'main'
+
+name: Cygnal_DBT
+
+jobs:
+    pr-tests:
+      if: ${{ github.event_name == 'pull_request' }}
+      runs-on: ubuntu-latest
+      steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+      
+      - name: 'Set up python and install dependencies'
+        uses: actions/setup-python@main
+        with:
+          python-version: '3.12' 
+      - run: |
+          python --version
+          pip --version
+          pip install -r cygnal_dbt/requirements.txt
+
+      - name: 'Run dbt tests'
+        run: |
+          cd cygnal_dbt/
+          dbt test
+
+    build-and-deploy:
+      if: ${{ github.event_name == 'push' }}
+      runs-on: ubuntu-latest
+      env:
+        IMAGE_NAME: ${{ secrets.REGISTRY_LOGIN_SERVER }}/cygnal-dbt-job:latest
+      steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+        
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Build and push image'
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build cygnal_dbt/ -t $IMAGE_NAME
+          docker push $IMAGE_NAME

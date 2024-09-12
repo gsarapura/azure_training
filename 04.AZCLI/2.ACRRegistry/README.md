@@ -1,3 +1,17 @@
+## Create a Resource Group and ACR
+```bash
+RESOURCE_GROUP=ACRTest 
+az group create --name $RESOURCE_GROUP --location eastus
+ACR_NAME=containertest
+az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic
+```
+Check in output:
+```json
+...
+  "loginServer": "${ACR_NAME}.azurecr.io",
+...
+```
+
 ## Build and Deploy Docker Image
 ```bash
 # Login into Azure and registry

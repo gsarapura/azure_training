@@ -1,15 +1,28 @@
-## Create a Resource Group and ACR
+## Simple Tutorial
 ```bash
 RESOURCE_GROUP=ACRTest 
 az group create --name $RESOURCE_GROUP --location eastus
-ACR_NAME=containertest
+ACR_NAME=containertest1234
 az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic
-```
-Check in output:
-```json
-...
-  "loginServer": "${ACR_NAME}.azurecr.io",
-...
+# Check in output: loginServer
+# "loginServer": "${ACR_NAME}.azurecr.io",
+
+# Login
+az acr login --name $ACR_NAME
+
+# Pull test image
+docker pull mcr.microsoft.com/hello-world
+
+# Tagging and pushing
+az acr list -o table
+
+TAG_VERSION=1.0.0
+docker tag mcr.microsoft.com/hello-world $ACR_NAME.azurecr.io/hello-world:$TAG_VERSION
+docker push $ACR_NAME.azurecr.io/hello-world:$TAG_VERSION
+
+## Retagging
+az acr import --name $ACR_NAME --source $ACR_NAME.azurecr.io/hello-world:$TAG_VERSION --image hello-world:qa --force
+
 ```
 
 ## Build and Deploy Docker Image

@@ -23,6 +23,24 @@ docker push $ACR_NAME.azurecr.io/hello-world:$TAG_VERSION
 ## Retagging
 az acr import --name $ACR_NAME --source $ACR_NAME.azurecr.io/hello-world:$TAG_VERSION --image hello-world:qa --force
 
+# Enabling Admin User to do docker login etc:
+az acr update -n $ACR_NAME --admin-enabled true
+```
+
+## Establishing Service Connection Via Managed Identities
+Managed Identities are a kind of Service Principal attached to a specific Azure Service.
+```bash
+az login
+# Find subscription and tenant ID
+az account list
+az account tenant list
+
+```
+
+## Creating a Service Principal
+```bash
+az ad sp list --all -o table
+az ad sp show --id $APP_ID -o table
 ```
 
 ## Build and Deploy Docker Image

@@ -1,25 +1,25 @@
 # Azure Front Door Using AZ CLI
 https://learn.microsoft.com/en-us/azure/frontdoor/quickstart-create-front-door-cli
- ```bash
- # Ensure that the front-door extension is added to your Azure CLI
- az extension add --name front-door
+```bash
+# Ensure that the front-door extension is added to your Azure CLI
+az extension add --name front-door
 
 RG_NAME=myRGFDCentral 
 LOCATION=eastus
 
- # RG
- az group create --name $RG_NAME --location $LOCATION
+# RG
+az group create --name $RG_NAME --location $LOCATION
 
- # Create two instances of a web app
- ## Create app service plans
- AS_NAME=myAppServicePlanCentralUS 
- az appservice plan create --name $AS_NAME --resource-group $RG_NAME 
+# Create two instances of a web app
+## Create app service plans
+AS_NAME=myAppServicePlanCentralUS 
+az appservice plan create --name $AS_NAME --resource-group $RG_NAME 
 
- ## Create web apps
- WEB_APP_NAME=WebAppContoso-1-asdf
- az webapp create --name $WEB_APP_NAME --resource-group $RG_NAME --plan $AS_NAME
+## Create web apps
+WEB_APP_NAME=WebAppContoso-1-asdf
+az webapp create --name $WEB_APP_NAME --resource-group $RG_NAME --plan $AS_NAME
 
- ## Create Storage Account - Frontend
+## Create Storage Account - Frontend
 az storage account create --name frontendtestsuv1 --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false
 
 az storage account create --name frontendtestsuv2 --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false

@@ -1,0 +1,126 @@
+trigger:
+  branches:
+    include:
+      - master
+    exclude:
+      - develop
+
+variables:
+   - group: parameters-dev
+
+jobs:
+- job: TestAndLint
+  displayName: 'Test and lint on new PRs'
+  pool:
+    vmImage: 'ubuntu-latest'
+  container: continuumio/miniconda3:latest
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10.X'
+        addToPath: true
+
+    - task: Cache@2
+      inputs:
+        key: 'conda | $(Agent.OS) | $(Build.SourcesDirectory)/environments/environment.yml'
+        path: $(Pipeline.Workspace)/.conda/envs/$(CONDA_ENV_NAME)
+        cacheHitVar: CONDA_CACHE_RESTORED
+      displayName: 'Conda Cache'
+
+    - task: Cache@2
+      inputs:
+        key: 'pre-commit | $(Agent.OS)'
+        path: $(Agent.TempDirectory)/.cache/pre-commit
+        cacheHitVar: PRE_COMMIT_CACHE_RESTORED
+      displayName: 'Pre-commit Cache'
+
+    - script: |
+        # Initialize Conda
+        source /etc/profile.d/conda.sh
+        conda init bash
+        # Source the Conda script to ensure environment variables are set correctly
+        source ~/.bashrc
+        conda config --set channel_priority strict
+        # Update the Conda environment
+        conda env update -n $(CONDA_ENV_NAME) -f $(CONDA_ENV_FILE)
+        # Activate the Conda environment
+        source activate $(CONDA_ENV_NAME)
+        # Install the code package
+        pip install -e code/
+        ./tools/run_linters.sh
+      displayName: 'Set up Conda environment, dependencies and run linters'
+      env:
+        CONDA_PKGS_DIRS: $(Pipeline.Workspace)/.conda/envs/sharpai-suvinil
+        CONDA_CACHE_DIR: $(Pipeline.Workspace)/.conda/pkgs
+        PRE_COMMIT_HOME: $(Agent.TempDirectory)/.cache/pre-commit
+
+- job: RunOWASPDependencyCheck
+  displayName: 'Run OWASP dependency check'
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+    - powershell: |
+        $nvdcachepath = $(get-childitem "$(Agent.WorkFolder)\_tasks\dependency-check-build-task*\*.*.*\dependency-check\data").FullName
+        echo "##vso[task.setvariable variable=nvdcachepath;]$nvdcachepath"
+      displayName: Find the NVD Cache path
+
+    - task: Cache@2
+      inputs:
+        key: '"NVDCache" | "$(Agent.OS)"'
+        restoreKeys: |
+          NVDCache | "$(Agent.OS)"
+          NVDCache
+        path: $(nvdcachepath)
+      displayName: NVD Cache
+
+    - task: dependency-check-build-task@6
+      displayName: "Dependency Check Build"
+      continueOnError: true
+      inputs:
+        projectName: "sharpAI-suvinil"
+        scanPath: "requirements.txt"
+        format: "ALL"
+        failOnCVSS: "8"
+        enableVerbose: true
+        additionalArguments: "--nvdApiKey 0d1f9326-2b3e-4f7d-aa7f-1e1aae06c875"
+
+    - task: PublishTestResults@2
+      displayName: "Publish Dependency Check Test Results"
+      inputs:
+        testResultsFiles: "dependency-check-junit.xml"
+        searchFolder: "/home/vsts/work/1/TestResults/dependency-check/"
+        testRunTitle: "Dependency Check"
+
+- job: RunSonarQube
+  displayName: 'Run SonarQube on default branch'
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - task: Cache@2
+      inputs:
+        key: 'sonar | $(Agent.OS)'
+        path: $(Pipeline.Workspace)/.sonar
+        cacheHitVar: SONAR_CACHE_RESTORED
+      displayName: 'Sonar Cache'
+
+    - task: SonarQubePrepare@5
+      inputs:
+        SonarQube: 'SonarQube-Fligoo-Suvinil'
+        scannerMode: 'CLI'
+        # configMode: 'file'
+        # configFile: 'sonar-project.properties'
+        cliProjectKey: "sharpai-suvinil"
+        configMode: "manual"
+        extraProperties: |
+          sonar.qualitygate.wait=true
+          sonar.qualitygate.timeout=300
+          sonar.python.coverage.reportPaths=coverage-reports/coverage-sharpai-pilot.xml
+          sonar.coverage.exclusions=**/code/setup.py,**/tools/create_lifecycle.py,**/tests/**/*.py*,**/__init__.py,**/pipelines.py,**/settings.py,**/deco_tools.py,**/dumpers.py,**/readers.py,**/logs.py,**/postprocessing/__main__.py,**/preprocessing/__main__.py,**/recommendations/__main__.py,**/columns.py,**/run_pipeline.py,**/run_prediction_function.py
+
+    - task: SonarQubeAnalyze@5
+
+    - task: SonarQubePublish@5
+      inputs:
+        pollingTimeoutSec: '300'
+

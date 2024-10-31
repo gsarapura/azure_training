@@ -4,7 +4,7 @@ https://learn.microsoft.com/en-us/azure/frontdoor/quickstart-create-front-door-c
 # Ensure that the front-door extension is added to your Azure CLI
 az extension add --name front-door
 
-RG_NAME=myRGFDCentral 
+RG_NAME=FrontDoorStorageDeleteLater
 LOCATION=eastus
 
 # RG
@@ -20,14 +20,14 @@ WEB_APP_NAME=WebAppContoso-1-asdf
 az webapp create --name $WEB_APP_NAME --resource-group $RG_NAME --plan $AS_NAME
 
 ## Create Storage Account - Frontend
-az storage account create --name frontendtestsuv1 --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false
+az storage account create --name frontmobilesuv --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false
 
-az storage account create --name frontendtestsuv2 --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false
+az storage account create --name frontdesktopsuv --resource-group $RG_NAME --location $LOCATION --sku Standard_RAGRS --kind StorageV2 --min-tls-version TLS1_2 --allow-blob-public-access false
 
 ## Enable Hosting
 # https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-how-to?tabs=azure-cli 
 # Activate hosting
-SA_NAME=frontendtestsuv2
+SA_NAME=frontdesktopsuv
 az storage blob service-properties update --account-name $SA_NAME --static-website --404-document error.html --index-document index.html
 # Upload Content
 az storage blob upload-batch -s . -d '$web' --account-name $SA_NAME --overwrite

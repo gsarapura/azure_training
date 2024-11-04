@@ -37,7 +37,7 @@ az storage account show -n $SA_NAME -g $RG_NAME  --query "primaryEndpoints.web" 
 
  # Create Front Door - CLASSIC
 BACKEND_ADDRESS=webappcontoso-1-asdf.azurewebsites.net
-FD_NAME=constososuvibilfronted2
+FD_NAME=suvfrontdoorclassicmobdesk
 az network front-door create --resource-group $RG_NAME --name $FD_NAME --accepted-protocols Http Https --backend-address $BACKEND_ADDRESS
 
 # 

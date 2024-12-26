@@ -31,6 +31,8 @@ SA_NAME=frontdesktopsuv
 az storage blob service-properties update --account-name $SA_NAME --static-website --404-document error.html --index-document index.html
 # Upload Content
 az storage blob upload-batch -s . -d '$web' --account-name $SA_NAME --overwrite
+# Remove content from $web
+az storage blob delete-batch --account-name $SA_NAME --source \$web
 # Find URL
 az storage account show -n $SA_NAME -g $RG_NAME  --query "primaryEndpoints.web" --output tsv
 # https://$SA_NAME.z13.web.core.windows.net/

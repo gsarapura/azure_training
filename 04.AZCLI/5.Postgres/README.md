@@ -1,6 +1,13 @@
 ```sql
 -- Create Dump
--- pg_dump -h HOSTNAMEl -U USERNAME -d DB > db-$DATE.sql
+DATE=$(date +%Y%m%d-%H%M%S)
+export HOSTNAME=""
+export USERNAME=""
+export DBNAME=""
+export PGPASSWORD=""
+pg_dump -h $HOSTNAME -U $USERNAME -d $DBNAME > db-$DATE.sql
+pg_dump -h $HOSTNAME -U $USERNAME -d $DBNAME | gzip -9c > db-$DATE.sql.gz
+--
 SELECT pg_size_pretty(pg_database_size('SOURCE_DB')) AS database_size;
 
 CREATE USER vendasdb_user WITH ENCRYPTED PASSWORD 'PASS';

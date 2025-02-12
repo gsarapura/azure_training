@@ -7,6 +7,8 @@ export DBNAME=""
 export PGPASSWORD=""
 pg_dump -h $HOSTNAME -U $USERNAME -d $DBNAME > db-$DATE.sql
 pg_dump -h $HOSTNAME -U $USERNAME -d $DBNAME | gzip -9c > db-$DATE.sql.gz
+
+gzip db-$DATE.sql.gz
 --
 SELECT pg_size_pretty(pg_database_size('SOURCE_DB')) AS database_size;
 

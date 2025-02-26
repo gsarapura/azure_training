@@ -38,12 +38,12 @@ terraform workspace select "$ENV"
 
 # Plan state
 terraform plan -var-file=environments/$ENV.tfvars --out "$PROJECT_NAME-$ENV.tfplan"
-terraform apply "plans/$PROJECT_NAME-$ENV.tfplan"
+terraform apply "$PROJECT_NAME-$ENV.tfplan"
 
 
 # Destroy
 terraform plan -var-file=environments/$ENV.tfvars -destroy -out "$PROJECT_NAME-$ENV.destroy.tfplan"
-terraform apply "plans/$PROJECT_NAME-$ENV.destroy.tfplan"
+terraform apply "$PROJECT_NAME-$ENV.destroy.tfplan"
 ```
 
 ## Refresh State with Deployed Services

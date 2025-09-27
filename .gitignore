@@ -66,3 +66,5 @@ operations/variable-scripts/variable.json
 # Sentinel runtime directory
 .sentinel
 # --------------------------------------------------
+
+node_modules/
